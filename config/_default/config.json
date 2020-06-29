@@ -1,0 +1,32 @@
+{
+       "baseURL": "grivan.thapar.me",
+       "footnoteReturnLinkContents": "↩",
+       "title": "Grivan's Personal Website",
+       "theme": "hugo-xmin",
+       "languageCode": "en-US",
+
+       "permalinks": {
+          "posts": "/:year/:month/:title/"
+       },
+
+       "params": {
+         "footer": "[Github](https://github.com/grivan) | [LinkedIn](https://www.linkedin.com/in/grivanthapar/)",
+         "AuthorName": "Jon Doe",
+         "GitHubUser": "spf13"
+       },
+
+       "menu": {
+         "main": [
+           {
+             "name": "About",
+             "url": "/",
+             "weight": 2
+           },
+           {
+             "name": "Posts",
+             "url": "/posts/",
+             "weight": 1
+           }
+       ]
+       }
+}

@@ -19,12 +19,12 @@
          "main": [
            {
              "name": "About",
-             "url": "/",
+             "url": "/readme",
              "weight": 2
            },
            {
              "name": "Posts",
-             "url": "/posts/",
+             "url": "/",
              "weight": 1
            }
        ]

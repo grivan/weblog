@@ -1,1 +1,8 @@
-{}
+{
+  "deployment": {
+    "targets": {
+      "name": "production",
+      "URL": "s3://weblog/?region=us-west-1"
+    }
+  }
+}

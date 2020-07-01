@@ -1,5 +1,5 @@
 {
-  "baseURL": "https://grivan.thapar.me"
+  "baseURL": "https://grivan.thapar.me",
   "deployment": {
     "targets": {
       "name": "production",

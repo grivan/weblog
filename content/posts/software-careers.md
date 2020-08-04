@@ -1,7 +1,7 @@
 ---
 title: "Software Engineering Careers"
-date: 2020-06-23T21:47:59-07:00
-draft: true
+date: 2020-08-03
+draft: false
 ---
 Recently, I have been thinking hard about software engineering careers. The field of software engineering has exploded, there are many companies trying to build software within different domains and each individual company usually has their own framework on how they want to organize their engineers and identify software boundaries around business needs. Usually there are infra teams, developer productivity teams, platform teams, feature teams, etc. The VP of engineering (or equivalents) are usually responsible for identifying these boundaries and keeping cohesion high and coupling low between teams. This post compiles my thoughts on software careers at these companies and hopefully serves as a guide for new engineers.
 

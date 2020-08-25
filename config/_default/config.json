@@ -1,7 +1,7 @@
 {
        "baseURL": "",
        "footnoteReturnLinkContents": "↩",
-       "title": "Grivan's Personal Website",
+       "title": "Grivan Thapar",
        "theme": "hugo-xmin",
        "languageCode": "en-US",
 
@@ -10,7 +10,7 @@
        },
 
        "params": {
-         "footer": "[Github](https://github.com/grivan) | [LinkedIn](https://www.linkedin.com/in/grivanthapar/)",
+         "footer": "© 2020 Grivan Thapar",
          "AuthorName": "Grivan Thapar",
          "GitHubUser": "grivan"
        },
@@ -28,5 +28,5 @@
              "weight": 1
            }
        ]
-       }
+     }
 }

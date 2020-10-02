@@ -1,7 +1,9 @@
 # README
 
 ## Running Locally
-`hugo server`
+`hugo server --environment <env>`
 
 ## Deploy
-`hugo deploy`
+* First `aws configure`
+* Generate by running `hugo`
+* Then `hugo deploy --invalidateCDN`

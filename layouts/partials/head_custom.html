@@ -1,1 +1,2 @@
-<link rel="stylesheet" href="{{ "/css/image.css" }}" />
+{{ $image := resources.Get "css/image.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $image.Permalink }}">

@@ -1,0 +1,15 @@
+{{ $js := (print "js/" (.Get "js") ".js")}}
+{{ $svgcss := (print "css/" (.Get "svg") ".css")}}
+
+{{ $style := resources.Get "css/style.css" | minify | fingerprint }}
+{{ $svg := resources.Get $svgcss | minify | fingerprint }}
+
+<link rel="stylesheet" href="{{ $style.Permalink }}">
+<link rel="stylesheet" href="{{ $svg.Permalink }}">
+
+<div id="chart">
+<svg>
+</svg>
+</div>
+<script src="{{ (resources.Get "js/d3.js").Permalink }}"></script>
+<script src="{{ (resources.Get $js).Permalink }}"></script>

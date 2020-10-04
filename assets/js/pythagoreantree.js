@@ -4,59 +4,91 @@
 		Based on work by Peter Cook (@prcweb)
 */
 
-var branches = [];
-var maxDepth = 10;
-var height = 100;
-var width = 100;
-var seed = {x:0,y:0,height:height,width:width,transform:'translate(380,340)',depth:0};
+// global constants
 var theta = 45;
-var nin = Math.PI/2;
-var MAX_DEPTH = 10;
+var MAX_DEPTH = 10; // depth of the tree
 var c = Math.cos(theta*Math.PI/180);
 var s = Math.sin(theta*Math.PI/180);
-var aLeft = [0,1];
 
-// TODO
-var seasons = {
-	fall: ['orange', 'red'],
-	winter: ['green', 'white'],
-	summer: ['green', 'light'],
+// season colors
+var seasons = [
+	{name: "summer", colors: ['darkolivegreen', 'forestgreen'], pos: 1},
+	{name: "fall", colors: ['darkorange', 'darkred'], pos: 0},
+	{name: "winter", colors: ['powderblue', 'palegreen'], pos: -1}
+]
+
+// stores the state of the tree in memory
+var branches = [];
+
+// base block
+var base_height = 100;
+var base_width = 100;
+var base_block = {
+	x:0,
+	y:0,
+	height:base_height,
+	width:base_width,
+	transform:'translate(380,340)',
+	depth:0,
+	opacity: 0.5,
+	color: 'darkred'
+};
+
+
+// main function that generates the tree
+function branch(b, season_colors) {
+  branches.push(b);
+	if (b.depth >= MAX_DEPTH) return;
+	var left = {
+		x:b.x,
+		y:b.y,
+		height:b.height,
+		width:b.width,
+		transform:b.transform+'rotate('+-theta+')'+' scale('+c+')'+' translate(0,'+-b.height+') ',
+		depth:b.depth+1,
+		opacity: opacity(b.depth),
+		color: color(b.depth+1, season_colors)
+	};
+	var lp = b.height*c*c;
+	var rp = -b.height-b.height*c*s;
+	var right = {
+		x:b.x,y:b.y,
+		height:b.height,
+		width:b.width,
+		transform:b.transform+'rotate('+(90-theta)+')'+' scale('+s+')'+' translate('+(-b.height*s*s*0)+','+(-b.height-b.height) + ') ',
+		depth:b.depth+1,
+		opacity: opacity(b.depth),
+		color: color(b.depth+1, season_colors)
+
+	};
+	branch(left, season_colors);
+	branch(right, season_colors);
 }
-//var aRight = [c*c,1+c*sin];
-//var mLeft = [cos*cos,cos*sin,-cos*sin,cos];
-//var mRight = [sin*sin,-cos*sun,cos*sin,sin*sin];
 
 function transform() {
 
 }
 
-function branch(b) {
-    branches.push(b);
-	if (b.depth >= MAX_DEPTH) return;
-	var left = {x:b.x,y:b.y,height:b.height,width:b.width,transform:b.transform+'rotate('+-theta+')'+' scale('+c+')'+' translate(0,'+-b.height+') ',depth:b.depth+1};
-	var lp = b.height*c*c;
-	var rp = -b.height-b.height*c*s;
-	var right = {x:b.x,y:b.y,height:b.height,width:b.width,transform:b.transform+'rotate('+(90-theta)+')'+' scale('+s+')'+' translate('+(-b.height*s*s*0)+','+(-b.height-b.height) + ') ',depth:b.depth+1};
-	branch(left);
-	branch(right);
-}
-
-function opacity(t) {
-	if(t.depth > MAX_DEPTH -6) {
-		return 0.06*(t.depth+10);
+// given a note t return opacity
+function opacity(depth) {
+	if(depth > MAX_DEPTH - 6) {
+		return 0.1*(depth+5);
 	}
-	return 0.5
+	return 0.5;
 }
 
-function color(t) {
-	var color = t.depth%2 == 0 ? 'darkred':'brown';
-	if(t.depth > MAX_DEPTH - 6) {
-		color = Math.random()>0.3 ? 'orange':'red';
+// given a node t return color
+function color(depth, season_colors) {
+	var color = depth%2 == 0 ? 'darkred':'brown';
+	if(depth > MAX_DEPTH - 6) {
+		color = Math.random()>0.3 ? season_colors[0]:season_colors[1];
 	}
 	return color;
 }
 
+// creates svg elements
 function create() {
+	// add the tree
 	d3.select('svg')
 		.selectAll('rect')
 		.data(branches)
@@ -68,36 +100,57 @@ function create() {
 		.attr('width',function(d){return d.width;})
 		.attr('transform',function(d){return d.transform;})
 		.style('stroke-width',5)
-		.style('fill',function(d){return color(d);})
-		.style('fill-opacity',function(d){return opacity(d);})
-		.attr('id', function(d) {return 'id-'+d.i;})
+		.style('fill',function(d){return d.color;})
+		.style('fill-opacity',function(d){return d.opacity;})
+		.attr('id', function(d) {return 'id-'+d.i;});
+
+	// add the season picker circles
+	d3.select('svg')
+		.selectAll('circle')
+		.data(seasons)
+		.enter()
+		.append('circle')
+		.style('fill', function(d) {return d.colors[0]})
+		.attr('id', function(d) {return d.name})
+		.attr('r', 15)
+		.attr('cx', function(d) {return 430 - 50*d.pos})
+		.attr('cy', 520)
+		.attr("stroke", "grey")
+		.attr("stroke-width", 0)
+		.on('mouseenter', function(d){
+			regenerate(false, d.colors)
+			d3.select(this)
+			.attr("stroke-width", 4)
+		})
+		.on('mouseleave', function(d){
+			regenerate(false, d.colors)
+			d3.select(this)
+			.attr("stroke-width", 0)
+		});
 }
 
+// updates svg elements, note only color changes
 function update() {
-		d3.select('svg')
+	d3.select('svg')
 		.selectAll('rect')
 		.data(branches)
 		.transition()
 		.duration(1000)
-		.attr('x',function(d){return d.x;})
-		.attr('y',function(d){return d.y;})
-		.attr('height',function(d){return d.height;})
-		.attr('width',function(d){return d.width;})
-		.attr('transform',function(d){return d.transform;})
-		.style('stroke-width',5)
-		.style('fill',function(d){return color(d);})
-		.style('fill-opacity',function(d){return opacity(d);})
-		.attr('id', function(d) {return 'id-'+d.i;})
+		.style('fill',function(d){return d.color;})
 }
 
-function regenerate(initialise) {
+// handy function to regenerate the tree with different colors
+function regenerate(initialise, season_colors) {
   branches = [];
-	branch(seed);
-	initialise ? create() : update();
+	if (initialise) {
+		branch(base_block, season_colors);
+		create();
+	}
+	else {
+		branch(base_block, season_colors);
+		update();
+	}
 }
 
-d3.selectAll('.regenerate')
-	.on('click', regenerate);
-
-regenerate(true);
-setInterval(function() {regenerate(false);}, 5*60*4);
+// draw the tree
+regenerate(true, seasons[0]['colors']);

@@ -1,14 +1,12 @@
 {{ $js := (print "js/" (.Get "js") ".js")}}
 {{ $svgcss := (print "css/" (.Get "svg") ".css")}}
 
-{{ $style := resources.Get "css/style.css" | minify | fingerprint }}
 {{ $svg := resources.Get $svgcss | minify | fingerprint }}
 
-<link rel="stylesheet" href="{{ $style.Permalink }}">
 <link rel="stylesheet" href="{{ $svg.Permalink }}">
 
-<div id="chart">
-<svg>
+<div class="svg-container">
+<svg viewBox="0 0 {{.Get "height"}} {{.Get "width"}}" class="svg-content">
 </svg>
 </div>
 <script src="{{ (resources.Get "js/d3.js").Permalink }}"></script>

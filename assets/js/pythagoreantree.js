@@ -28,7 +28,7 @@ var base_block = {
 	y:0,
 	height:base_height,
 	width:base_width,
-	transform:'translate(380,340)',
+	transform:'translate(350,350)',
 	depth:0,
 	opacity: 0.5,
 	color: 'darkred'
@@ -113,11 +113,16 @@ function create() {
 		.style('fill', function(d) {return d.colors[0]})
 		.attr('id', function(d) {return d.name})
 		.attr('r', 15)
-		.attr('cx', function(d) {return 430 - 50*d.pos})
+		.attr('cx', function(d) {return 400 - 50*d.pos})
 		.attr('cy', 520)
 		.attr("stroke", "grey")
 		.attr("stroke-width", 0)
 		.on('mouseenter', function(d){
+			regenerate(false, d.colors)
+			d3.select(this)
+			.attr("stroke-width", 4)
+		})
+		.on('click', function(d){ // for mobile devices
 			regenerate(false, d.colors)
 			d3.select(this)
 			.attr("stroke-width", 4)

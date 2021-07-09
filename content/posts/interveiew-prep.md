@@ -4,7 +4,6 @@ date: 2020-08-06T23:18:52-07:00
 draft: true
 ---
 ### Tree Problems
-
 1. [Maximum Difference Between Node and Ancestor](!https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/solution/)
   * I solved via brute force, each pair of nodes will be compared and this complexity is O(N2).
   * A better approach is to do a single tree recursion but pass the current max and current min values.
@@ -15,6 +14,16 @@ draft: true
 
 3. [Range Sum of BST](!https://leetcode.com/problems/range-sum-of-bst/)
   * Sum elements of a BST between two digits, solved via simple pre order traversal. Calculate sums for each subtree and add up.
+
+4. [Diameter of BST](!https://leetcode.com/problems/diameter-of-binary-tree/)
+  * Intuition was correct, needed to add the left and right subtree.
+  * Had to look at the solution to solve
+
+5. [BST to Doubly Linked List](!https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+  * Process the tree into a list and then reset the right/left to prev/next in a linked list
+
+6. [BST Iterator](!https://leetcode.com/problems/binary-search-tree-iterator/)
+  * Keep a stack and "simulate" recursion.
 
 ### String Manipulation
 1. [Valid Palindrom II](!https://leetcode.com/problems/valid-palindrome-ii/)

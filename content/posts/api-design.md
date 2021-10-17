@@ -2,45 +2,35 @@
 title: "Thoughts on API Design"
 date: 2021-07-08T20:25:51-07:00
 ---
-This post is about designing APIs. Recently I've been working to re-define APIs
-for a service. Unfortunately during this process, I have realized there is
-no silver bullet when designing APIs. A lot about the API design will depend
-on the clients consuming the API, how the data is available to the backend
-service to query and the SLAs being promised. However, there some general best
-practices I came across that remain relevant when designing new APIs and tried
-to distill them down to this post.
+Recently I've been working to unify/redefine backend APIs for a set of related
+backend systems and my learnings are captured in this post. So here it goes - key
+things to keep in mind while designing APIs:
 
-So here to goes, in no particular order, key things to keep in mind while
-designing APIs:
-
-## Model Resources
-Model the API in terms of resource objects and then define the actions a client
+## Model the API Request/Response Upfront
+First step in the API design phase is to outline request and response objects upfront.
+One can model the API in terms of resource objects and then define the actions a client
 can take over these resources. The resources may be real or virtual objects
-that may or may not be tied to a database record. Modeling resources correctly upfront
-is critical since changing/restructuring these resources will involve breaking
+that may or may not be tied to a database record. Modeling request/responses correctly
+upfront is critical since changing/restructuring these objects will involve breaking
 changes for the clients consuming the APIs.
 
 When defining model resources here a few key things to keep in mind:
 1. Be consistent in naming resource and operations that can be performed on
 them, use the naming convention common to your team/organization.
-2. Consider the number of data base queries / external dependencies required in
-constructing a response.
-3. Consider the size of responses, allow clients to request extra information
-when necessary instead of creating a bloated standard response.
+2. Consider any external dependencies required in constructing a response.
+3. Consider the size of request and responses, allow clients to request extra
+information when necessary instead of creating a bloated standard response.
 4. Choose a date time format and stick to it. ISO 8601 is human readable
 and very common to use. Use UTC and let the clients do conversion to local
 timezone.
-5. Consider implementing API versioning upfront. I haven't come across a standard
-way to version APIs, so use what makes sense. One can version APIs top level or
-version individual resources.
-6. There may be tradeoffs between meeting service SLAs (see section below) and
-defining resources.
+5. Consider implementing API versioning upfront. There isn't a standard way to version
+APIs (eg., URL based versioning vs Query param based versioning), so use what makes sense.
 
 ## Well Defined SLAs
 Another important consideration when designing APIs is to think about the SLAs
-(Service Level Agreements) in terms of latency and throughput. You should be
-thinking about these upfront when designing new APIs since it can impact
-implementations quite a bit. For example, if you already have a database that
+(Service Level Agreements) in terms of **latency** and **throughput**. One should be
+thinking about these upfront when designing new APIs since they can have major
+impact on backend implementations. For example, if you already have a database that
 you're building a new API on top of - you may want to consider load testing the exact
 queries that are expected to run when your service starts to take production
 traffic and have room for growth. If you expect your resources to not
@@ -61,8 +51,8 @@ they call the APIs in order to not see throttling. [Token bucket](https://en.wik
 you usually want to enforce throttling limits per operation and also globally.
 
 ## Idempotent Operations
-Idempotency is difficult to understand. Generally you'd want to keep operations
-idempotent but that does not mean backend state is not altered due to
+Idempotency is more than just being all to repeat a (write) request without failure. Generally
+you'd want to keep operations idempotent but that does not mean backend state is not altered due to
 a idempotent operation. It simply means an operation can be repeated without any
 side effects. As an example if you issue `DELETE` to an resource, issuing another
 `DELETE` would simply return a 404 without altering the server state. Consider another
